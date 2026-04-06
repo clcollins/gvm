@@ -1,36 +1,28 @@
-# gvm
-
-[![Build Status](https://travis-ci.org/moovweb/gvm.svg?branch=master)](https://travis-ci.org/moovweb/gvm)
-
-By Josh Bussdieker (jbuss, jaja, jbussdieker) while working at [Moovweb](https://www.moovweb.com)
-
-Currently lovingly maintained by [Benjamin Knigge](https://github.com/BenKnigge)
-
-Pull requests and other any other contributions would be very much appreciated.
+# gvm — Go Version Manager
 
 GVM provides an interface to manage Go versions.
 
+> **Note:** This is a fork of [moovweb/gvm](https://github.com/moovweb/gvm), which was abandoned in August 2023 (last commit: 2023-08-14). The upstream repository has had no maintenance, review activity, or response to pull requests since then. This fork is independently maintained by [Chris Collins](https://github.com/clcollins).
+>
+> Originally created by Josh Bussdieker while working at [Moovweb](https://www.moovweb.com), and previously maintained by [Benjamin Knigge](https://github.com/BenKnigge).
+
+Pull requests and other contributions are welcome.
+
 Features
 ========
-* Install/Uninstall Go versions with `gvm install [tag]` where tag is "60.3", "go1", "weekly.2011-11-08", or "tip"
+* Install/Uninstall Go versions with `gvm install [tag]` where tag is "go1.22.5", "go1.23rc1", or "tip"
 * List added/removed files in GOROOT with `gvm diff`
 * Manage GOPATHs with `gvm pkgset [create/use/delete] [name]`. Use `--local` as `name` to manage repository under local path (`/path/to/repo/.gvm_local`).
 * List latest release tags with `gvm listall`. Use `--all` to list weekly as well.
 * Cache a clean copy of the latest Go source for multiple version installs.
 * Link project directories into GOPATH
 
-Background
-==========
-When we started developing in Go mismatched dependencies and API changes plagued our build process and made it extremely difficult to merge with other peoples changes.
-
-After nuking my entire GOROOT several times and rebuilding I decided to come up with a tool to oversee the process. It eventually evolved into what gvm is today.
-
 Installing
 ==========
 
 To install:
 
-1.  Install [Bison](https://www.gnu.org/software/bison/):
+1.  Install [Bison](https://www.gnu.org/software/bison/) (only needed if building Go from source):
 
     ```
     sudo apt-get install bison
@@ -39,15 +31,19 @@ To install:
 1.  Install gvm:
 
     ```
-    bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
+    bash < <(curl -s -S -L https://raw.githubusercontent.com/clcollins/gvm/main/binscripts/gvm-installer)
     ```
 
 Or if you are using zsh just change `bash` with `zsh`
 
 Installing Go
 =============
-    gvm install go1.4
-    gvm use go1.4 [--default]
+
+The quickest way to install a Go version is with the `--prefer-binary` flag, which downloads a precompiled binary from go.dev and only falls back to source compilation if no binary is available for your platform:
+
+    gvm install go1.22.5 --prefer-binary
+    gvm use go1.22.5 [--default]
+
 Once this is done Go will be in the path and ready to use. $GOROOT and $GOPATH are set automatically.
 
 Additional options can be specified when installing Go:
@@ -60,15 +56,18 @@ Additional options can be specified when installing Go:
         -B,  --binary             Only install from binary.
              --prefer-binary      Attempt a binary install, falling back to source.
         -h,  --help               Display this message.
-        
-### A Note on Compiling Go 1.5+
-Go 1.5+ removed the C compilers from the toolchain and [replaced][compiler_note] them with one written in Go. Obviously, this creates a bootstrapping problem if you don't already have a working Go install. In order to compile Go 1.5+, make sure Go 1.4 is installed first. If Go 1.4 won't install try a later version (e.g. go1.5), just make sure you have the `-B` option after the version number. 
+
+### Compiling Go from Source
+
+Go 1.5+ removed the C compilers from the toolchain and [replaced][compiler_note] them with one written in Go. This means you need an existing Go installation to compile from source. Go 1.20+ requires Go 1.17.13+ as a bootstrap compiler.
+
+The simplest bootstrap path:
 
 ```
-gvm install go1.4 -B
-gvm use go1.4
+gvm install go1.17.13 -B
+gvm use go1.17.13
 export GOROOT_BOOTSTRAP=$GOROOT
-gvm install go1.7
+gvm install go1.22.5
 ```
 
 ### A Note on ARMv6 and ARMv7 architectures (32 bit)
@@ -83,20 +82,6 @@ And then, compile any other version:
 
 ```
 gvm install go1.20.7
-```
-
-#### To install Go 1.20+
-Go 1.20+ requires go1.17.3+. Use the below:
-
-```
-gvm install go1.4 -B
-gvm use go1.4
-export GOROOT_BOOTSTRAP=$GOROOT
-gvm install go1.17.13
-gvm use go1.17.13
-export GOROOT_BOOTSTRAP=$GOROOT
-gvm install go1.20
-gvm use go1.20
 ```
 
 [compiler_note]: https://docs.google.com/document/d/1OaatvGhEAq7VseQ9kkavxKNAfepWy2yhPUBs96FGV28/edit
@@ -121,13 +106,10 @@ If that doesn't work see the troubleshooting steps at the bottom of this page.
 
 Mac OS X Requirements
 ====================
- * Install Mercurial from https://www.mercurial-scm.org/downloads
  * Install Xcode Command Line Tools from the App Store.
 
 ```
 xcode-select --install
-brew update
-brew install mercurial
 ```
 
 Linux Requirements
@@ -135,26 +117,18 @@ Linux Requirements
 
 Debian/Ubuntu
 ==================
-    sudo apt-get install curl git mercurial make binutils bison gcc build-essential
+    sudo apt-get install curl git make binutils bison gcc build-essential
 
-Redhat/Centos
+Redhat/Centos/Fedora
 ==================
 
-    sudo yum install curl
-    sudo yum install git
-    sudo yum install make
-    sudo yum install bison
-    sudo yum install gcc
-    sudo yum install glibc-devel
-
- * Install Mercurial from http://pkgs.repoforge.org/mercurial/
+    sudo dnf install curl git make bison gcc glibc-devel
 
 FreeBSD Requirements
 ====================
 
     sudo pkg_add -r bash
     sudo pkg_add -r git
-    sudo pkg_add -r mercurial
 
 Vendoring Native Code and Dependencies
 ==================================================
@@ -189,7 +163,7 @@ system provides:
 
 Recipe for success:
 
-    gvm use go1.1
+    gvm use go1.22
     gvm pkgset use current-known-good
     # Let's assume that this includes some C headers and native libraries, which
     # Go's CGO facility wraps for us.  Let's assume that these native
@@ -206,5 +180,3 @@ See examples/native for a working example.
 Troubleshooting
 ===============
 Sometimes especially during upgrades the state of gvm's files can get mixed up. This is mostly true for upgrade from older version than 0.0.8. Changes are slowing down and a LTR is imminent. But for now `rm -rf ~/.gvm` will always remove gvm. Stay tuned!
-
-[![Gitter](https://badges.gitter.im/GoVesionManager/community.svg)](https://gitter.im/GoVesionManager/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
