@@ -19,29 +19,29 @@ This fork is now independently maintained by [Chris Collins](https://github.com/
 
 ### Phase 1: Ownership Divorce
 
-- **ISSUE_1**: Replace moovweb ownership references throughout codebase
+- [#2](https://github.com/clcollins/gvm/issues/2): Replace moovweb ownership references throughout codebase
 
 ### Phase 2: Critical Bug Fixes
 
-- **ISSUE_2**: Fix syntax errors in pkgset-use and find_local_pkgset
-- **ISSUE_3**: Fix shell compatibility and quoting issues
-- **ISSUE_4**: Add SHA256 checksum verification for binary downloads
+- [#3](https://github.com/clcollins/gvm/issues/3): Fix syntax errors in pkgset-use and find_local_pkgset
+- [#4](https://github.com/clcollins/gvm/issues/4): Fix shell compatibility and quoting issues
+- [#5](https://github.com/clcollins/gvm/issues/5): Add SHA256 checksum verification for binary downloads
 
 ### Phase 3: Infrastructure Cleanup
 
-- **ISSUE_5**: Remove dead infrastructure files (.travis.yml, Vagrantfile, Gemfile, Rakefile)
-- **ISSUE_6**: Add GitHub Actions CI and repository scaffolding
-- **ISSUE_7**: Migrate test framework from Ruby tf to bats-core
+- [#6](https://github.com/clcollins/gvm/issues/6): Remove dead infrastructure files (.travis.yml, Vagrantfile, Gemfile, Rakefile)
+- [#7](https://github.com/clcollins/gvm/issues/7): Add GitHub Actions CI and repository scaffolding
+- [#8](https://github.com/clcollins/gvm/issues/8): Migrate test framework from Ruby tf to bats-core
 
 ### Phase 4: Modernization
 
-- **ISSUE_8**: Remove legacy package managers and deprecate gvm cross
-- **ISSUE_9**: Make --prefer-binary the default installation behavior
-- **ISSUE_10**: Add go.work workspace support
+- [#9](https://github.com/clcollins/gvm/issues/9): Remove legacy package managers and deprecate gvm cross
+- [#10](https://github.com/clcollins/gvm/issues/10): Make --prefer-binary the default installation behavior
+- [#11](https://github.com/clcollins/gvm/issues/11): Add go.work workspace support
 
 ## Issue Details
 
-### ISSUE_1: Replace moovweb ownership references throughout codebase
+### #2: Replace moovweb ownership references throughout codebase
 
 **Priority**: 1 (do first)
 
@@ -65,7 +65,7 @@ Files to leave unchanged:
 
 ---
 
-### ISSUE_2: Fix syntax errors in pkgset-use and find_local_pkgset
+### #3: Fix syntax errors in pkgset-use and find_local_pkgset
 
 **Priority**: 2 (critical bugs)
 
@@ -87,7 +87,7 @@ Files to leave unchanged:
 
 ---
 
-### ISSUE_3: Fix shell compatibility and quoting issues
+### #4: Fix shell compatibility and quoting issues
 
 **Priority**: 2 (bugs)
 
@@ -107,7 +107,7 @@ Files to leave unchanged:
 
 ---
 
-### ISSUE_4: Add SHA256 checksum verification for binary downloads
+### #5: Add SHA256 checksum verification for binary downloads
 
 **Priority**: 2 (security)
 
@@ -123,7 +123,7 @@ Implementation:
 
 ---
 
-### ISSUE_5: Remove dead infrastructure files
+### #6: Remove dead infrastructure files
 
 **Priority**: 3 (cleanup)
 
@@ -131,16 +131,16 @@ Delete:
 - `.travis.yml` -- Travis CI is dead
 - `Vagrantfile` -- targets Ubuntu 12.04 (Precise Pangolin), EOL since 2017
 - `Gemfile` -- only existed for Ruby `tf` test framework
-- `Rakefile` -- test runner for `tf`; replaced by bats in Issue 7
+- `Rakefile` -- test runner for `tf`; replaced by bats in #8
 
 **Acceptance criteria**: Files deleted, no Ruby dependencies remain.
 
 ---
 
-### ISSUE_6: Add GitHub Actions CI and repository scaffolding
+### #7: Add GitHub Actions CI and repository scaffolding
 
 **Priority**: 3 (infrastructure)
-**Depends on**: ISSUE_7 (bats migration, for test runner)
+**Depends on**: #8 (bats migration, for test runner)
 
 Create:
 - `.github/workflows/ci.yml` -- CI on push to main + PRs; Ubuntu + macOS matrix; runs shellcheck + bats
@@ -153,7 +153,7 @@ Create:
 
 ---
 
-### ISSUE_7: Migrate test framework from Ruby tf to bats-core
+### #8: Migrate test framework from Ruby tf to bats-core
 
 **Priority**: 3 (testing)
 
@@ -169,10 +169,10 @@ Steps:
 
 ---
 
-### ISSUE_8: Remove legacy package managers and deprecate gvm cross
+### #9: Remove legacy package managers and deprecate gvm cross
 
 **Priority**: 4 (modernization)
-**Depends on**: ISSUE_1 (to avoid merge conflicts on same moovweb lines)
+**Depends on**: #2 (to avoid merge conflicts on same moovweb lines)
 
 1. Remove `install_gpkg()`, `install_gb()`, `install_goprotobuf()` from `scripts/install` (lines 254-295). These install from dead URLs.
 2. Remove `--with-protobuf` and `--with-build-tools` flags from install.
@@ -183,7 +183,7 @@ Steps:
 
 ---
 
-### ISSUE_9: Make --prefer-binary the default installation behavior
+### #10: Make --prefer-binary the default installation behavior
 
 **Priority**: 4 (modernization)
 
@@ -200,7 +200,7 @@ Changes:
 
 ---
 
-### ISSUE_10: Add go.work workspace support
+### #11: Add go.work workspace support
 
 **Priority**: 4 (modernization)
 
@@ -214,17 +214,17 @@ Go 1.18+ supports workspace files (`go.work`). GVM should recognize them:
 ## Dependency Graph
 
 ```
-ISSUE_1 (ownership) ─────────────────────────────> ISSUE_8 (legacy removal)
-ISSUE_2 (syntax bugs)      [independent]
-ISSUE_3 (shell compat)     [independent]
-ISSUE_4 (checksums)         [independent]
-ISSUE_5 (dead files)        [independent]
-ISSUE_7 (bats migration) ──────────────────────────> ISSUE_6 (GitHub Actions CI)
-ISSUE_9 (binary default)   [independent]
-ISSUE_10 (go.work)          [independent]
+#2  (ownership) ──────────────────────────────────> #9  (legacy removal)
+#3  (syntax bugs)      [independent]
+#4  (shell compat)     [independent]
+#5  (checksums)         [independent]
+#6  (dead files)        [independent]
+#8  (bats migration) ──────────────────────────────> #7  (GitHub Actions CI)
+#10 (binary default)   [independent]
+#11 (go.work)          [independent]
 ```
 
-Issues 1-5, 7, 9, 10 can all be worked independently. Issue 6 should land after Issue 7. Issue 8 should land after Issue 1.
+Issues #2-6, #8, #10, #11 can all be worked independently. Issue #7 should land after #8. Issue #9 should land after #2.
 
 ## Definition of Done
 
