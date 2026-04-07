@@ -61,7 +61,7 @@ Files to delete:
 Files to leave unchanged:
 - `ChangeLog` -- historical record
 
-**Acceptance criteria**: `grep -r moovweb` returns zero results outside ChangeLog.
+**Acceptance criteria**: `grep -r moovweb binscripts/ scripts/ extra/ AUTHORS LICENSE` returns zero results. Documentation files (`README.md`, `docs/`) may retain upstream attribution and migration context. `ChangeLog` is excluded as historical record.
 
 ---
 
@@ -228,7 +228,7 @@ Issues #2-6, #8, #10, #11 can all be worked independently. Issue #7 should land 
 
 ## Definition of Done
 
-- [ ] All moovweb references replaced (except ChangeLog)
+- [ ] moovweb ownership references replaced in code, config, packaging, and active project metadata; historical/upstream attribution preserved in documentation
 - [ ] Critical syntax errors fixed (pkgset-use, find_local_pkgset)
 - [ ] Shell compatibility issues resolved
 - [ ] Binary downloads verified with SHA256

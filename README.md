@@ -31,10 +31,10 @@ To install:
 1.  Install gvm:
 
     ```
-    bash < <(curl -s -S -L https://raw.githubusercontent.com/clcollins/gvm/main/binscripts/gvm-installer)
+    SRC_REPO=https://github.com/clcollins/gvm.git bash < <(curl -s -S -L https://raw.githubusercontent.com/clcollins/gvm/main/binscripts/gvm-installer) main
     ```
 
-Or if you are using zsh just change `bash` with `zsh`
+    Note: The `SRC_REPO` variable is needed until the installer is updated to default to this fork. The installer script requires `bash` regardless of your login shell.
 
 Installing Go
 =============
