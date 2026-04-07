@@ -73,7 +73,7 @@ Files to leave unchanged:
    ```
    elif [[ "${local_pkgset_rematch}" == true ]] && $(( ${#accumulator[@]}%2 )) -eq 0 ]]; then
    ```
-   Missing opening `[[` before arithmetic test. The `$((` creates a command substitution instead of an arithmetic comparison inside `[[ ]]`.
+   Missing opening `[[` before the arithmetic comparison. `$(( ... ))` is arithmetic expansion, and here the comparison is written outside `[[ ... ]]`, causing invalid shell syntax.
 
 2. `scripts/function/find_local_pkgset:7,13` -- broken PWD assignment:
    ```

@@ -59,7 +59,7 @@ Additional options can be specified when installing Go:
 
 ### Compiling Go from Source
 
-Go 1.5+ removed the C compilers from the toolchain and [replaced][compiler_note] them with one written in Go. This means you need an existing Go installation to compile from source. Go 1.20+ requires Go 1.17.13+ as a bootstrap compiler.
+Go 1.5+ removed the C compilers from the toolchain and [replaced][compiler_note] them with one written in Go. This means you need an existing Go installation to compile from source. Each Go version requires a recent-enough bootstrap compiler (typically within the last two major releases).
 
 The simplest bootstrap path:
 
@@ -78,10 +78,10 @@ gvm install go1.21.0 -B
 gvm use go1.21.0
 ```
 
-And then, compile any other version:
+And then, compile any other version (including older ones):
 
 ```
-gvm install go1.20.7
+gvm install go1.22.5
 ```
 
 [compiler_note]: https://docs.google.com/document/d/1OaatvGhEAq7VseQ9kkavxKNAfepWy2yhPUBs96FGV28/edit
