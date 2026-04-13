@@ -50,6 +50,9 @@ jobs:
             echo "No bats tests found yet — skipping"
           fi
       - name: Test gvm-installer execution
+        env:
+          TERM: xterm
+          GVM_NO_UPDATE_PROFILE: "true"
         run: |
-          bash binscripts/gvm-installer master "${{ runner.temp }}"
+          bash binscripts/gvm-installer main "${{ runner.temp }}"
           test -d "${{ runner.temp }}/.gvm" || test -d "${{ runner.temp }}/gvm"
