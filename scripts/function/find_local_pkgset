@@ -3,19 +3,19 @@
 function find_local_pkgset
 {
     local TOPFILE=.gvm_local
-    if [ -d $TOPFILE ] ; then
-        PWD= /bin/pwd
+    if [ -d "$TOPFILE" ] ; then
+        PWD=$(/bin/pwd)
+        echo "$PWD"
     else
-        local HERE=$PWD
+        local HERE="$PWD"
         T=
-        while [ \( ! \( -d $TOPFILE \) \) -a \( $PWD != "/" \) ]; do
+        while [ \( ! \( -d "$TOPFILE" \) \) -a \( "$PWD" != "/" \) ]; do
             builtin cd ..
-            T=`PWD= /bin/pwd`
+            T=$(/bin/pwd)
         done
-        builtin cd $HERE
+        builtin cd "$HERE"
         if [ -d "$T/$TOPFILE" ]; then
-            echo $T
+            echo "$T"
         fi
     fi
 }
-
