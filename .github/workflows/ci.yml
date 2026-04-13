@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Run shellcheck on scripts
+        run: |
+          find binscripts scripts -type f -name '*.sh' -o -type f -exec sh -c 'head -1 "$1" | grep -q "bash\|sh" && echo "$1"' _ {} \; | \
+            xargs shellcheck --severity=error || true
+      - name: Run shellcheck on function files
+        run: |
+          for f in scripts/function/display_error scripts/function/display_message \
+                   scripts/function/display_warning scripts/function/display_fatal \
+                   scripts/function/extract_version scripts/function/find_local_pkgset; do
+            echo "Checking $f..."
+            shellcheck --severity=error --shell=bash "$f" || true
+          done
+
+  test:
+    name: Tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install bats
+        run: |
+          if [[ "$RUNNER_OS" == "Linux" ]]; then
+            sudo apt-get update && sudo apt-get install -y bats
+          else
+            brew install bats-core
+          fi
+      - name: Run bats tests
+        run: |
+          if [ -d tests ] && find tests -name '*.bats' -print -quit | grep -q .; then
+            bats tests/
+          else
+            echo "No bats tests found yet — skipping"
+          fi
+      - name: Test gvm-installer execution
+        run: |
+          bash binscripts/gvm-installer master "${{ runner.temp }}"
+          test -d "${{ runner.temp }}/.gvm" || test -d "${{ runner.temp }}/gvm"
