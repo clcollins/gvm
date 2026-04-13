@@ -54,5 +54,6 @@ jobs:
           TERM: xterm
           GVM_NO_UPDATE_PROFILE: "true"
         run: |
-          bash binscripts/gvm-installer main "${{ runner.temp }}"
+          BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+          bash binscripts/gvm-installer "$BRANCH" "${{ runner.temp }}"
           test -d "${{ runner.temp }}/.gvm" || test -d "${{ runner.temp }}/gvm"
