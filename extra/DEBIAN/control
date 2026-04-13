@@ -1,5 +1,5 @@
 Package: gvm
 Version: 1.0.15
 Architecture: all
-Maintainer: Joshua Bussdieker <josh.bussdieker@moovweb.com>
+Maintainer: Chris Collins <chris.collins@redhat.com>
 Description: Go Version Manager
