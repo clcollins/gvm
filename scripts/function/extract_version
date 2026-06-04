@@ -5,7 +5,7 @@ extract_version(){
 	# They can also have the suffix rc or betaN
 
 	# Early versions can be 0.0.1
-	if [ $(echo $1 | grep release) ]; then
+	if echo "$1" | grep -q "release"; then
 		echo "0.0.1"
 	else
 		# Let's strip those prefixes and suffixes
