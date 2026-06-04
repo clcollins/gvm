@@ -29,9 +29,12 @@ setup_gvm_environment() {
         return 1
     fi
 
-    # gvm's cd override may return non-zero when no default environment
-    # exists (fresh install), which is expected — suppress it
-    source "$GVM_ROOT/scripts/gvm" || true
+    # gvm's cd override (scripts/env/cd) may return non-zero when no
+    # default environment exists (fresh install). This is expected but
+    # bats runs setup_file with set -e, so we must temporarily disable it.
+    set +e
+    source "$GVM_ROOT/scripts/gvm"
+    set -e
 }
 
 teardown_gvm_environment() {
@@ -46,5 +49,7 @@ source_gvm_functions() {
 }
 
 load_gvm_shell_function() {
-    source "$GVM_ROOT/scripts/gvm" || true
+    set +e
+    source "$GVM_ROOT/scripts/gvm"
+    set -e
 }
